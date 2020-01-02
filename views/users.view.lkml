@@ -147,6 +147,7 @@ view: users {
       }
       else: "Other"
     }
+    drill_fields: [first_name, last_name, gender, orders.count]
   }
 ################################################################################
 

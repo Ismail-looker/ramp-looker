@@ -1,6 +1,6 @@
 view: order_items {
   sql_table_name: demo_db.order_items ;;
-  drill_fields: [id]
+  drill_fields: [id, users.first_name, users.last_name, users.state ]
 
   dimension: id {
     description: "Order Items ID"
@@ -103,6 +103,7 @@ view: order_items {
     type: number                                          # Measure type 4 - Number
     value_format_name: eur
     sql: ${total_sale_price} - ${inventory_items.total_cost_in_euros} ;;
+    drill_fields: [inventory_items.id, products.item_name, products.brand, products.category, products.department, order_items.profit_margin]
   }
 
   measure: median_order {
@@ -117,7 +118,6 @@ view: order_items {
     description: "Number of Order Items"
     type: count
     drill_fields: [id, users.full_name, users.gender,users.city, users.state, orders.id, products.item_name, products.brand, products.category,inventory_items.id]
-
   }
 
 }
