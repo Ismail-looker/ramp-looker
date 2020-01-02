@@ -54,7 +54,7 @@ The following join parameters:
 
 #### Make a dashboard with:
 
-A global filter that updates the entire dashboard when updated
+A global filter that updates the entire dashboard when updated  
 One of each of the following visualization types:
 
   - [x] Column
