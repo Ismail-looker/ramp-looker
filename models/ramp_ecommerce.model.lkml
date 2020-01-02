@@ -17,8 +17,8 @@ explore: order_items {
   sql_always_where: ${orders.created_date} >= '2017-01-01' ;; # Explore parameter 2 - sql_always_where
   always_filter: {                                            # Explore parameter 3 - always_filter
     filters: {
-      field: users.age
-      value: "18"
+      field: orders.is_order_complete
+      value: "yes"
     }
   }
   fields: [ALL_FIELDS*, -users.zip]                           # Explore parameter 4 - fields
@@ -67,7 +67,6 @@ explore: orders {
     sql_on: ${orders.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
-
 }
 
 # Products Explore

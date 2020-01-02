@@ -26,6 +26,11 @@ view: products {
   dimension: item_name {
     type: string
     sql: ${TABLE}.item_name ;;
+    link: {
+      label: "Google Search"
+      url: "http://www.google.com/search?q={{ value }}"
+      icon_url: "http://google.com/favicon.ico"
+    }
   }
 
   dimension: rank {
@@ -43,7 +48,7 @@ view: products {
     description: "Retail Price Tiers"
     type: tier
     tiers: [0, 10, 20, 30, 40, 50, 60, 70, 80]
-    style: relational
+    style: integer
     sql: ${retail_price} ;;
   }
 
@@ -52,6 +57,11 @@ view: products {
   dimension: sku {
     type: string
     sql: ${TABLE}.sku ;;
+    link: {
+      label: "Google"
+      url: "http://www.google.com/search?q={{ value }}"
+      icon_url: "http://google.com/favicon.ico"
+    }
   }
 
   measure: count {
@@ -65,6 +75,7 @@ view: products {
     sql_distinct_key: ${inventory_items.id} ;;
     value_format_name: eur
     sql: ${inventory_items.cost_in_euros};;
+    drill_fields: [products.brand, products.category,products.departments, inventory_items.count]
   }
 
 

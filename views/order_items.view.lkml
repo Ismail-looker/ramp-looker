@@ -75,12 +75,14 @@ view: order_items {
     type: min                                             # Measure type 1 - Min
     value_format_name: eur
     sql: ${sale_price} ;;
+    drill_fields: [id, orders.id, inventory_items.id, products.item_name, products.brand, products.category]
   }
 
   measure: most_costly_item {
     type: max                                             # Measure type 1 - Max
     value_format_name: eur
     sql: ${sale_price} ;;
+    drill_fields: [id, orders.id, inventory_items.id, products.item_name, products.brand, products.category]
   }
 
   measure: average_sale_price {
@@ -114,7 +116,8 @@ view: order_items {
   measure: count {
     description: "Number of Order Items"
     type: count
-    drill_fields: [id, orders.id, inventory_items.id, products.brand, products.category]
+    drill_fields: [id, users.full_name, users.gender,users.city, users.state, orders.id, products.item_name, products.brand, products.category,inventory_items.id]
+
   }
 
 }

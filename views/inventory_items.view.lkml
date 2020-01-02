@@ -59,12 +59,12 @@ view: inventory_items {
     type: sum
     value_format_name: eur
     sql: ${TABLE}.cost;;
-    drill_fields: [id, created_date, products.item_name, products.id]
+    drill_fields: [id, created_date, products.item_name, products.id, products.brand, products.category]
   }
 
   measure: count {
     description: "Number of Inventory Items"
     type: count
-    drill_fields: [id, products.item_name, products.id]
+    drill_fields: [id, products.item_name, products.id, products.brand, products.category]
   }
 }

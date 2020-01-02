@@ -147,7 +147,6 @@ view: users {
       }
       else: "Other"
     }
-  drill_fields: [id,full_name,gender,city,state]
   }
 ################################################################################
 

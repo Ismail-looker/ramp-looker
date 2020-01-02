@@ -58,8 +58,8 @@ A global filter that updates the entire dashboard when updated
 One of each of the following visualization types:
 
   - [x] Column
-  - [x] Scatter
   - [x] Bar
+  - [x] Scatter
   - [x] Line
   - [x] Area
   - [x] Pie
