@@ -22,6 +22,7 @@ explore: order_items {
     }
   }
   fields: [ALL_FIELDS*, -users.zip]                           # Explore parameter 4 - fields
+
   join: orders {
     type: left_outer                                          # Join parameter 1 - type
     sql_on: ${order_items.order_id} = ${orders.id} ;;
@@ -51,6 +52,7 @@ explore: order_items {
 explore: inventory_items {
   label: "Inventory Items (Ramp)"
   view_label: "Inventory Items"
+
   join: products {
     type: left_outer
     sql_on: ${inventory_items.product_id} = ${products.id} ;;
@@ -62,6 +64,7 @@ explore: inventory_items {
 explore: orders {
   label: "Orders (Ramp)"
   view_label: "Orders"
+
   join: users {
     type: left_outer
     sql_on: ${orders.user_id} = ${users.id} ;;
@@ -72,6 +75,7 @@ explore: orders {
 # Products Explore
 explore: products {
   label: "Products (Ramp)"
+
   join: inventory_items {
     type: left_outer
     sql_on: ${products.id} = ${inventory_items.product_id};;
@@ -83,6 +87,7 @@ explore: products {
 explore: user_data {
   label: "User Data (Ramp)"
   view_label: "User Data"
+
   join: users {
     type: left_outer
     sql_on: ${user_data.user_id} = ${users.id} ;;
@@ -108,6 +113,7 @@ explore: events {
   hidden: yes
   label: "Events (Ramp)"
   view_label: "Events"
+
   join: users {
     type: left_outer
     fields: [users.created_date]
