@@ -43,6 +43,7 @@ view: order_items {
     type: number
     value_format_name: eur
     sql: ${TABLE}.sale_price ;;
+    html: <div style="font-size: 20px; color: #fff900; background-color: ##8fbc8f; text-align:center;" >{{rendered_value}}</div> ;;
   }
 
 # Dimensions ##################################################################
@@ -83,6 +84,7 @@ view: order_items {
     value_format_name: eur
     sql: ${sale_price} ;;
     drill_fields: [id, orders.id, inventory_items.id, products.item_name, products.brand, products.category]
+    html: <p style="font-size: 220%; color: #83848c; text-align:left;" >{{rendered_value | replace: '€', '€ ' }} &#128550;</p> ;;
   }
 
   measure: average_sale_price {
