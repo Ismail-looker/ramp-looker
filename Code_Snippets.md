@@ -17,8 +17,42 @@ SELECT * from
 </code></pre>
 
 <br>
+#### Parameters [LookML](https://looker-internal.skilljar.com/intro-to-parameters-and-templated-filters/235559)
+<pre><code>
+parameter: sale_price_metric_picker {
+description: "Use with the Sale Price Metric measure"
+type: unquoted
+allowed_value: {
+  label: "Total Sale Price"
+  value: "SUM"
+}
+allowed_value: {
+  label: "Average Sale Price"
+  value: "AVG"
+}
+allowed_value: {
+  label: "Maximum Sale Price"
+  value: "MAX"
+}
+allowed_value: {
+  label: "Minimum Sale Price"
+  value: "MIN"
+}
+}
 
-#### Templated Filters [LookML]
+
+measure: sale_price_metric {
+  type: number
+  sql: {% sale_price_metric_picker %}(${sale_price}) ;;
+}
+
+Because we are using type:unquoted, we can dictate that our Measure will end up as
+
+`sql:MIN(${sale_price});; ` or as  `sql:MAX(${sale_price});; `
+</code></pre>
+
+<br>
+#### Templated Filters [LookML](https://looker-internal.skilljar.com/intro-to-parameters-and-templated-filters/235611)
 <pre><code>
 filter: category_count_picker {
 type: string
