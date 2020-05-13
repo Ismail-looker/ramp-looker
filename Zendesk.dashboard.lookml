@@ -1,10 +1,7 @@
 - dashboard: zendesk
   title: Zendesk
-  layout: tile
-  tile_size: 100
-
-  filters:
-
+  layout: newspaper
+  description: My Dashboard of reflections on things learnt during the "Explore Ramp"
   elements:
     - name: hello_world
       type: looker_column

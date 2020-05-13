@@ -79,9 +79,41 @@ view: users {
   }
 
   dimension: state {
-    description: "User State"
     type: string
     sql: ${TABLE}.state ;;
+    drill_fields: [zip]
+    map_layer_name: us_states
+    link: {
+      label: "By Zip"
+      url: "
+      {% assign vis= '{\"map_plot_mode\":\"points\",
+      \"heatmap_gridlines\":false,
+      \"heatmap_gridlines_empty\":false,
+      \"heatmap_opacity\":0.5,
+      \"show_region_field\":true,
+      \"draw_map_labels_above_data\":true,
+      \"map_tile_provider\":\"light\",
+      \"map_position\":\"fit_data\",
+      \"map_scale_indicator\":\"off\",
+      \"map_pannable\":true,
+      \"map_zoomable\":true,
+      \"map_marker_type\":\"circle\",
+      \"map_marker_icon_name\":\"default\",
+      \"map_marker_radius_mode\":\"proportional_value\",
+      \"map_marker_units\":\"meters\",
+      \"map_marker_proportional_scale_type\":\"linear\",
+      \"map_marker_color_mode\":\"fixed\",
+      \"show_view_names\":false,
+      \"show_legend\":true,
+      \"quantize_map_value_colors\":false,
+      \"reverse_map_value_colors\":false,
+      \"type\":\"looker_map\",
+      \"defaults_version\":1}' %}
+
+      {% assign dynamic_fields= '[]' %}
+
+      {{link}}&vis={{vis | encode_uri}}&dynamic_fields={{dynamic_fields | encode_uri}}"
+    }
   }
 
 # DIMENSIONS ##################################################################
@@ -100,21 +132,23 @@ view: users {
     sql: Concat(${first_name} , " " , ${last_name})  ;;
   }
 
-  dimension: state_on_map{
-    description: "US States (Map)"
-    map_layer_name: us_states
-    sql: ${TABLE}.state ;;
-  }
+#   dimension: state_on_map{
+#     description: "US States (Map)"
+#     map_layer_name: us_states
+#     sql: ${TABLE}.state ;;
+#   }
+
+
 
   dimension: region {
     description: "User Region"
     case: {                                              # Dimension type 3 - Case
       when: {
         sql: ${state}
-        IN (
-          'Connecticut','Maine','New Hampshire','Massachusetts','New Jersey',
-          'New York','Pennsylvania','Rhode Island','Vermont');;
-      label: "Northeast"
+                  IN (
+                    'Connecticut','Maine','New Hampshire','Massachusetts','New Jersey',
+                    'New York','Pennsylvania','Rhode Island','Vermont');;
+        label: "Northeast"
       }
       when: {
         sql: ${state}
@@ -151,21 +185,235 @@ view: users {
   }
 ################################################################################
 
+  dimension: height_high {
+    map_layer_name: us_states
+    sql: ${TABLE}.state ;;
+    drill_fields: [zip]
+    link: {
+      label: "link url"
+      url:"{% assign vis_config= '{
+        \"map_plot_mode\":\"po\"map_plot_mode\":\"points\",\"heatmap_gridlines\":false,\"heatmap_gridlines_empty\":false,\"heatmap_opacity\":0.5,\"show_region_field\":true,\"draw_map_labels_above_data\":true,\"map_tile_provider\":\"light\",\"map_position\":\"fit_data\",\"map_scale_indicator\":\"off\",\"map_pannable\":true,\"map_zoomable\":true,\"map_marker_type\":\"circle\",\"map_marker_icon_name\":\"default\",\"map_marker_radius_mode\":\"proportional_value\",\"map_marker_units\":\"meters\",\"map_marker_proportional_scale_type\":\"linear\",\"map_marker_color_mode\":\"fixed\",\"show_view_names\":false,\"show_legend\":true,\"quantize_map_value_colors\":false,\"reverse_map_value_colors\":false,\"type\":\"looker_map\",\"defaults_version\":1}' %}
+        {{ dummy._link }}&vis_config={{ vis_config | encode_uri }}&toggle=dat,pik,vis&limit=5000&sorts=count+desc"
+    }
+  }
+
+
+#   dimension: state {
+#     description: "User State"
+#     type: string
+#     sql: ${TABLE}.state ;;
+#   }
+
+  measure: dummy { # Dummy measure added to generate drill link for dimension below. After copy from https://xin-looker.github.io/ Replace {{link}} with {{dummy._link}}
+    type: number
+    sql: 1=1 ;;
+    drill_fields: [zip,count]  # drill fields for the custom link (Drill by Zip (...))
+  }
+
+  dimension: state_on_map{
+    description: "US States (Map)"
+    map_layer_name: us_states
+    sql: ${TABLE}.state ;;
+    drill_fields: [zip,count]
+    link: {
+      label: "Drill By Zip (Point Map)"   #
+      url: "{% assign vis= '{
+      \"map_plot_mode\":\"points\",
+      \"heatmap_gridlines\":false,
+      \"heatmap_gridlines_empty\":false,
+      \"heatmap_opacity\":0.5,
+      \"show_region_field\":true,
+      \"draw_map_labels_above_data\":true,
+      \"map_tile_provider\":\"light\",
+      \"map_position\":\"fit_data\",
+      \"map_scale_indicator\":\"off\",
+      \"map_pannable\":true,
+      \"map_zoomable\":true,
+      \"map_marker_type\":\"circle\",
+      \"map_marker_icon_name\":\"default\",
+      \"map_marker_radius_mode\":\"proportional_value\",
+      \"map_marker_units\":\"meters\",
+      \"map_marker_proportional_scale_type\":\"linear\",
+      \"map_marker_color_mode\":\"fixed\",
+      \"show_view_names\":false,
+      \"show_legend\":true,
+      \"quantize_map_value_colors\":false,
+      \"reverse_map_value_colors\":false,
+      \"type\":\"looker_map\",
+      \"defaults_version\":1}' %}
+
+      {{dummy._link}}&vis={{ vis | encode_uri }}"
+    }
+    link: {
+      label: "Drill By Zip (Column Chart)"
+      url: "{% assign vis= '{\"x_axis_gridlines\":false,
+            \"y_axis_gridlines\":true,
+            \"show_view_names\":false,
+            \"show_y_axis_labels\":true,
+            \"show_y_axis_ticks\":true,
+            \"y_axis_tick_density\":\"default\",
+            \"y_axis_tick_density_custom\":5,
+            \"show_x_axis_label\":true,
+            \"show_x_axis_ticks\":true,
+            \"y_axis_scale_mode\":\"linear\",
+            \"x_axis_reversed\":false,
+            \"y_axis_reversed\":false,
+            \"plot_size_by_field\":false,
+            \"trellis\":\"\",
+            \"stacking\":\"\",
+            \"limit_displayed_rows\":false,
+            \"legend_position\":\"center\",
+            \"point_style\":\"none\",
+            \"show_value_labels\":false,
+            \"label_density\":25,
+            \"x_axis_scale\":\"auto\",
+            \"y_axis_combined\":true,
+            \"ordering\":\"none\",
+            \"show_null_labels\":false,
+            \"show_totals_labels\":false,
+            \"show_silhouette\":false,
+            \"totals_color\":\"#808080\",
+            \"type\":\"looker_column\",
+            \"map_plot_mode\":\"points\",
+            \"heatmap_gridlines\":false,
+            \"heatmap_gridlines_empty\":false,
+            \"heatmap_opacity\":0.5,
+            \"show_region_field\":true,
+            \"draw_map_labels_above_data\":true,
+            \"map_tile_provider\":\"light\",
+            \"map_position\":\"fit_data\",
+            \"map_scale_indicator\":\"off\",
+            \"map_pannable\":true,
+            \"map_zoomable\":true,
+            \"map_marker_type\":\"circle\",
+            \"map_marker_icon_name\":\"default\",
+            \"map_marker_radius_mode\":\"proportional_value\",
+            \"map_marker_units\":\"meters\",
+            \"map_marker_proportional_scale_type\":\"linear\",
+            \"map_marker_color_mode\":\"fixed\",
+            \"show_legend\":true,
+            \"quantize_map_value_colors\":false,
+            \"reverse_map_value_colors\":false,
+            \"defaults_version\":1,
+            \"series_types\":{},
+            \"show_null_points\":true,
+            \"interpolation\":\"linear\"}' %}
+
+            {{dummy._link}}&vis={{vis | encode_uri}}"
+    }
+  }
+
+
   dimension: zip {
     description: "User Zip Code"
-    type: zipcode                                        # Dimension type 5 - Zipcode
+    type: zipcode
     sql: ${TABLE}.zip ;;
   }
 
   measure: count {
     description: "Number of Users"
     type: count
-    drill_fields: [id, first_name, last_name, orders.count]
+    drill_fields: [id, zip, first_name, last_name, orders.count] # Just paste escaped vis from https://xin-looker.github.io/ in url parameter below
+    link: {
+      label: "Custom Drill in Measure"
+      url: "{% assign vis= '{\"map_plot_mode\":\"points\",
+            \"heatmap_gridlines\":false,
+            \"heatmap_gridlines_empty\":false,
+            \"heatmap_opacity\":0.5,
+            \"show_region_field\":true,
+            \"draw_map_labels_above_data\":true,
+            \"map_tile_provider\":\"light\",
+            \"map_position\":\"fit_data\",
+            \"map_scale_indicator\":\"off\",
+            \"map_pannable\":true,
+            \"map_zoomable\":true,
+            \"map_marker_type\":\"circle\",
+            \"map_marker_icon_name\":\"default\",
+            \"map_marker_radius_mode\":\"proportional_value\",
+            \"map_marker_units\":\"meters\",
+            \"map_marker_proportional_scale_type\":\"linear\",
+            \"map_marker_color_mode\":\"fixed\",
+            \"show_view_names\":false,
+            \"show_legend\":true,
+            \"quantize_map_value_colors\":false,
+            \"reverse_map_value_colors\":false,
+            \"type\":\"looker_map\",
+            \"defaults_version\":1}' %}
+
+            {{link}}&vis={{vis | encode_uri}}"
+    }
   }
+
+
+
+
+
 
 # Measures ##################################################################
 ## My Modifications
 
+
+  measure: test_drillcount {
+    description: "Number of Users"
+    type: count
+    drill_fields: [zip]
+    link: {
+      label: "Drill By Zip"
+      url: "{% assign vis_config= '{
+            \"map_plot_mode\":\"points\",
+            \"heatmap_gridlines\":false,
+            \"heatmap_gridlines_empty\":false,
+            \"heatmap_opacity\":0.5,
+            \"show_region_field\":true,
+            \"draw_map_labels_above_data\":true,
+            \"map_tile_provider\":\"light\",
+            \"map_position\":\"fit_data\",
+            \"map_scale_indicator\":\"off\",
+            \"map_pannable\":true,
+            \"map_zoomable\":true,
+            \"map_marker_type\":\"circle\",
+            \"map_marker_icon_name\":\"default\",
+            \"map_marker_radius_mode\":\"proportional_value\",
+            \"map_marker_units\":\"meters\",
+            \"map_marker_proportional_scale_type\":\"linear\",
+            \"map_marker_color_mode\":\"fixed\",
+            \"show_view_names\":false,
+            \"show_legend\":true,
+            \"quantize_map_value_colors\":false,
+            \"reverse_map_value_colors\":false,
+            \"type\":\"looker_map\",
+            \"defaults_version\":1}' %}
+            {{link}}&vis_config={{ vis_config | encode_uri }}"
+    }
+    link: {
+      label: "Drill By Zip"
+      url: "{% assign vis_config= '{
+            \"map_plot_mode\":\"points\",
+            \"heatmap_gridlines\":false,
+            \"heatmap_gridlines_empty\":false,
+            \"heatmap_opacity\":0.5,
+            \"show_region_field\":true,
+            \"draw_map_labels_above_data\":true,
+            \"map_tile_provider\":\"light\",
+            \"map_position\":\"fit_data\",
+            \"map_scale_indicator\":\"off\",
+            \"map_pannable\":true,
+            \"map_zoomable\":true,
+            \"map_marker_type\":\"circle\",
+            \"map_marker_icon_name\":\"default\",
+            \"map_marker_radius_mode\":\"proportional_value\",
+            \"map_marker_units\":\"meters\",
+            \"map_marker_proportional_scale_type\":\"linear\",
+            \"map_marker_color_mode\":\"fixed\",
+            \"show_view_names\":false,
+            \"show_legend\":true,
+            \"quantize_map_value_colors\":false,
+            \"reverse_map_value_colors\":false,
+            \"type\":\"looker_map\",
+            \"defaults_version\":1}' %}
+            {{link}}&vis_config={{ vis_config | encode_uri }}"
+    }
+  }
 
 
 ##############################################################################

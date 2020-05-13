@@ -15,13 +15,13 @@ explore: order_items {
   label: "Order Items (Ramp)"
   view_label: "Order Items"                                   # Explore parameter 1 - view_label
   sql_always_where: ${orders.created_date} >= '2017-01-01' ;; # Explore parameter 2 - sql_always_where
-  always_filter: {                                            # Explore parameter 3 - always_filter
-    filters: {
-      field: orders.is_order_complete
-      value: "yes"
-    }
-  }
-  fields: [ALL_FIELDS*, -users.zip]                           # Explore parameter 4 - fields
+#   always_filter: {                                            # Explore parameter 3 - always_filter
+#     filters: {
+#       field: orders.is_order_complete
+#       value: "yes"
+#     }
+#   }
+  fields: [ALL_FIELDS*]                           # Explore parameter 4 - fields
 
   join: orders {
     type: left_outer                                          # Join parameter 1 - type
